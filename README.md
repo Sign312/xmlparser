@@ -1,6 +1,8 @@
 # xmlparser
 xmlparser是一个用于xml字符串与PHP数组、对象之间相互转化的工具，简单轻量
 
+2.0版本更新,解决非关联数组转xml问题
+
 ### API
 
 * XmlParser::arr2xml()
@@ -14,3 +16,6 @@ xmlparser是一个用于xml字符串与PHP数组、对象之间相互转化的�
 
 * XmlParser::xml2obj()
 传入XML字符串,返回PHP对象
+
+* XmlParser::is_assoc()
+判断数组是否为关联数组,传入数组,返回true or false

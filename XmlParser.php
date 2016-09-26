@@ -10,8 +10,24 @@ class XmlParser
         }
         foreach ($arr as $key => $val) {
             if (is_array($val)) {
-                $child = self::arr2xml($val, false);
-                $str .= "<$key>$child</$key>";
+                if (!self::is_assoc($val)) {
+                    for ($i = 0; $i < count($val); ++$i) {
+                        if (is_array($val[$i])) {
+                            $child = self::arr2xml($val[$i], false);
+                            $str .= "<$key>$child</$key>";
+                        } else {
+                            $value = $val[$i];
+                            if (gettype($value) == 'string') {
+                                $str .= "<$key><![CDATA[$value]></$key>";
+                            } else {
+                                $str .= "<$key>$value</$key>";
+                            }
+                        }
+                    }
+                } else {
+                    $child = self::arr2xml($val, false);
+                    $str .= "<$key>$child</$key>";
+                }
             } else {
                 if (gettype($val) == 'string') {
                     $str .= "<$key><![CDATA[$val]]></$key>";
@@ -60,5 +76,14 @@ class XmlParser
     {
         $obj = simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOCDATA);
         return $obj;
+    }
+
+    public static function is_assoc($array)
+    {
+        if (is_array($array)) {
+            $keys = array_keys($array);
+            return $keys !== array_keys($keys);
+        }
+        return false;
     }
 }
