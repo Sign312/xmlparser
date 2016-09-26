@@ -7,6 +7,8 @@ xmlparser是一个用于xml字符串与PHP数组、对象之间相互转化的�
 
 * XmlParser::arr2xml()
 传入PHP数组,返回XML字符串
+注意:数组第一位不得为非关联数组
+如: array[0]['name'],array[0]等将不能成功转化
 
 * XmlParser::obj2xml()
 传入PHP对象,返回XML字符串
