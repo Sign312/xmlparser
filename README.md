@@ -21,3 +21,13 @@ xmlparser是一个用于xml字符串与PHP数组、对象之间相互转化的�
 
 * XmlParser::is_assoc()
 判断数组是否为关联数组,传入数组,返回true or false
+
+注意:
+xmlparser生成的xml文本节点内容都会自动加上CDATA部件
+
+如:
+
+    <xml>
+        <name><![CDATA[flypie]]></name>
+        <age>20</age>
+    </xml>
