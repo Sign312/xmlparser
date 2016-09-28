@@ -80,7 +80,7 @@ class XmlParser
         $str = '';
         if ($is_cdata) {
             if (gettype($value) == 'string') {
-                $str .= "<$key><![CDATA[$value]></$key>";
+                $str .= "<$key><![CDATA[$value]]></$key>";
             } else {
                 $str .= "<$key>$value</$key>";
             }
