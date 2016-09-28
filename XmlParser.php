@@ -2,7 +2,7 @@
 
 class XmlParser
 {
-    public static function arr2xml($arr, $isroot = true)
+    public static function arr2xml($arr, $is_cdata = false, $isroot = true)
     {
         $str = "";
         if ($isroot) {
@@ -13,27 +13,19 @@ class XmlParser
                 if (!self::is_assoc($val)) {
                     for ($i = 0; $i < count($val); ++$i) {
                         if (is_array($val[$i])) {
-                            $child = self::arr2xml($val[$i], false);
-                            $str .= "<$key>$child</$key>";
+                            $child = self::arr2xml($val[$i], $is_cdata, false);
+                            $str .= self::xml_join($key, $child, false);
                         } else {
                             $value = $val[$i];
-                            if (gettype($value) == 'string') {
-                                $str .= "<$key><![CDATA[$value]></$key>";
-                            } else {
-                                $str .= "<$key>$value</$key>";
-                            }
+                            $str .= self::xml_join($key, $value, $is_cdata);
                         }
                     }
                 } else {
-                    $child = self::arr2xml($val, false);
-                    $str .= "<$key>$child</$key>";
+                    $child = self::arr2xml($val, $is_cdata, false);
+                    $str .= self::xml_join($key, $child, false);
                 }
             } else {
-                if (gettype($val) == 'string') {
-                    $str .= "<$key><![CDATA[$val]]></$key>";
-                } else {
-                    $str .= "<$key>$val</$key>";
-                }
+                $str .= self::xml_join($key, $val, $is_cdata);
             }
         }
         if ($isroot) {
@@ -42,7 +34,7 @@ class XmlParser
         return $str;
     }
 
-    public static function obj2xml($obj, $isroot = true)
+    public static function obj2xml($obj, $is_cdata = false, $isroot = true)
     {
         $str = "";
         if ($isroot) {
@@ -50,14 +42,10 @@ class XmlParser
         }
         foreach ($obj as $key => $val) {
             if (is_object($val)) {
-                $child = self::arr2xml($val, false);
-                $str .= "<$key>$child</$key>";
+                $child = self::obj2xml($val, $is_cdata, false);
+                $str .= self::xml_join($key, $child, false);
             } else {
-                if (gettype($val) == 'string') {
-                    $str .= "<$key><![CDATA[$val]]></$key>";
-                } else {
-                    $str .= "<$key>$val</$key>";
-                }
+                $str .= self::xml_join($key, $val, $is_cdata);
             }
         }
         if ($isroot) {
@@ -85,5 +73,20 @@ class XmlParser
             return $keys !== array_keys($keys);
         }
         return false;
+    }
+
+    private static function xml_join($key, $value, $is_cdata)
+    {
+        $str = '';
+        if ($is_cdata) {
+            if (gettype($value) == 'string') {
+                $str .= "<$key><![CDATA[$value]></$key>";
+            } else {
+                $str .= "<$key>$value</$key>";
+            }
+        } else {
+            $str .= "<$key>$value</$key>";
+        }
+        return $str;
     }
 }

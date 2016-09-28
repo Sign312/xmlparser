@@ -26,6 +26,6 @@ var_dump($arr);
 
 var_dump($obj);
 
-echo XmlParser::arr2xml($test_arr);
+echo XmlParser::arr2xml($test_arr, true);
 
-echo XmlParser::obj2xml($test_obj);
+echo XmlParser::obj2xml($test_obj, true);
